@@ -1,0 +1,27 @@
+{{- if .Values.configMap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "jachai-map.fullname" . }}
+  labels:
+    {{- include "jachai-map.labels" . | nindent 4 }}
+data:
+{{- range $item := .Values.configMap.data }}
+{{- toYaml $item | nindent 2 }}
+{{- end }}
+{{- end }}
+---
+{{- if .Values.environment }}
+{{- $fullName := include "jachai-map.fullname" . -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullName }}-env
+  labels:
+  {{- include "jachai-map.labels" . | nindent 4 }}
+data:
+  {{- range $key, $value := .Values.environment }}
+  {{ $key }}: {{ $value | toString | quote }}
+  {{- end }}
+---
+{{- end }}

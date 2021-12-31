@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.jachai</groupId>
-	<artifactId>map</artifactId>
+	<artifactId>jachai-map</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>map</name>
 	<description>Map Server of Jachai</description>

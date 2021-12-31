@@ -1,0 +1,69 @@
+replicaCount: 1
+
+image:
+  repository: 661254676507.dkr.ecr.ap-southeast-1.amazonaws.com/jachai-map
+  pullPolicy: IfNotPresent
+  tag: "does-not-exist"
+
+serviceAccount:
+  create: false
+  name: ""
+
+podAnnotations: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # nginx.ingress.kubernetes.io/whitelist-source-range: ""
+  hosts:
+    - host: map.jachai.com
+
+environment: {}
+environmentSecrets: {} # configure from env-secret.yaml
+
+configMap:
+  enabled: true
+  volumeMounts:
+    - mountPath: /app/application.properties
+      subPath: application.properties
+  data:
+    - application.properties: |-
+        server.port=8080
+        spring.application.name=jachai-map
+        spring.data.mongodb.uri=${MONGODB_URI}
+
+        ##### Log ####
+        logging.file.name=app.log
+        logging.pattern.file=%d %p %c{1.} [%t] %m%n
+        logging.pattern.console=%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
+        logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG
+        management.endpoint.health.show-details=always
+
+        ##### JWT ####
+        jwt.key=${JWT_KEY}
+        otp.duration=3
+        jwt.expiration.millis=2592000000
+        
+        ##### BARI KOI ####
+        bari.koi.base.url=https://barikoi.xyz/v1/api/search
+        bari.koi.api.key=${BARI_KOI_API_KEY}
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 90
