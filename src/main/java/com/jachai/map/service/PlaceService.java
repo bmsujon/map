@@ -64,14 +64,16 @@ public class PlaceService {
     public BariKoiGeoCodeResponseRest getAddress(Location location) {
         BariKoiGeoCodeResponseRest response = bariKoiRPCService.getAddress(location);
 
-        Place place = Place.builder()
-                .location(location)
-                .geoLocation(new GeoJsonPoint(location.getLongitude(), location.getLatitude()))
-                .city(response.getPlace().getCity())
-                .area(response.getPlace().getArea())
-                .address(response.getPlace().getAddress())
-                .build();
-        placeRepository.save(place);
+        if ( placeRepository.existsByAddress(response.getPlace().getAddress()) == false) {
+            Place place = Place.builder()
+                    .location(location)
+                    .geoLocation(new GeoJsonPoint(location.getLongitude(), location.getLatitude()))
+                    .city(response.getPlace().getCity())
+                    .area(response.getPlace().getArea())
+                    .address(response.getPlace().getAddress())
+                    .build();
+            placeRepository.save(place);
+        }
         return response;
     }
 
