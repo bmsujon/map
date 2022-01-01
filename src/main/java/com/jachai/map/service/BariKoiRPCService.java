@@ -27,6 +27,7 @@ public class BariKoiRPCService {
         Map<String, String> params = new HashMap<>();
         params.put("q", key);
         params.put("bangla", "true");
+        params.put("city", "dhaka");
 
         return (BariKoiSearchListResponseRest) InternalRESTProvider.doRest(
                 HttpMethod.GET,
