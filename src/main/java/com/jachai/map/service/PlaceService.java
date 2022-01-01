@@ -60,6 +60,7 @@ public class PlaceService {
         return ret;
     }
 
+
     @Async
     public void addPlaces(List<PlaceResponse> placeResponses, String key) {
         for ( PlaceResponse placeResponse : placeResponses ) {
