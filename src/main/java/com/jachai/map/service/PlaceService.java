@@ -33,8 +33,10 @@ public class PlaceService {
     }
     public List<PlaceResponse> findByKey(String key) {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<PlaceResponse> placeResponses =  placeRepository.findAllByKeyContainsIgnoreCase(key, pageable);
+        Page<PlaceResponse> placeResponses =  placeRepository.findAllByKeyIgnoreCase(key, pageable);
         if ( placeResponses.getContent().size() > 0 ) return placeResponses.getContent();
+
+
         BariKoiSearchListResponseRest responseFromBariKoi = bariKoiRPCService.searchPlaces(key);
         List<PlaceResponse> ret = new ArrayList<>();
         for ( BariKoiSearchResponse bariKoiSearchResponse : responseFromBariKoi.getPlaces() ) {

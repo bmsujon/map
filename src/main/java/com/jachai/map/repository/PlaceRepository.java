@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlaceRepository extends MongoRepository<Place, String> {
     Place findByAddress(String address);
-    Page<PlaceResponse> findAllByKeyContainsIgnoreCase(String key, Pageable pageable);
+    Page<PlaceResponse> findAllByKeyIgnoreCase(String key, Pageable pageable);
     Boolean existsByAddress(String address);
 }
