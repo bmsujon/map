@@ -6,6 +6,7 @@ import com.jachai.map.dto.rest.response.BariKoiSearchResponse;
 import com.jachai.map.dto.rest.response.PlaceResponse;
 import com.jachai.map.entity.Place;
 import com.jachai.map.repository.PlaceRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class PlaceService {
     @Autowired
     private PlaceRepository placeRepository;
@@ -54,6 +56,7 @@ public class PlaceService {
             ret.add(placeResponse);
         }
         addPlaces(ret, key);
+        log.info("Return autocomplete result: " + ret.size());
         return ret;
     }
 
