@@ -1,6 +1,7 @@
 package com.jachai.map.service;
 
 import com.jachai.map.dto.Location;
+import com.jachai.map.dto.rest.response.BariKoiGeoCodeResponseRest;
 import com.jachai.map.dto.rest.response.BariKoiSearchListResponseRest;
 import com.jachai.map.dto.rest.response.BariKoiSearchResponse;
 import com.jachai.map.dto.rest.response.PlaceResponse;
@@ -60,6 +61,19 @@ public class PlaceService {
         return ret;
     }
 
+    public BariKoiGeoCodeResponseRest getAddress(Location location) {
+        BariKoiGeoCodeResponseRest response = bariKoiRPCService.getAddress(location);
+
+        Place place = Place.builder()
+                .location(location)
+                .geoLocation(new GeoJsonPoint(location.getLongitude(), location.getLatitude()))
+                .city(response.getPlace().getCity())
+                .area(response.getPlace().getArea())
+                .address(response.getPlace().getAddress())
+                .build();
+        placeRepository.save(place);
+        return response;
+    }
 
     @Async
     public void addPlaces(List<PlaceResponse> placeResponses, String key) {

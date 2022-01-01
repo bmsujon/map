@@ -15,11 +15,11 @@ import org.springframework.web.context.request.async.DeferredResult;
 @Controller
 public class GeoCodeControllerAsync {
     @Autowired
-    private BariKoiRPCService bariKoiRPCService;
+    private PlaceService placeService;
 
     @Async
     public void getAddress(DeferredResult<ResponseEntity<SimpleMessageResponseREST>> result, Location location) {
-        BariKoiGeoCodeResponseRest response = bariKoiRPCService.getAddress(location);
+        BariKoiGeoCodeResponseRest response = placeService.getAddress(location);
         MapSays.ok(result, response);
     }
 }
