@@ -11,7 +11,7 @@
 	<groupId>com.jachai</groupId>
 	<artifactId>jachai-map</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>map</name>
+	<name>jachai-map</name>
 	<description>Map Server of Jachai</description>
 	<properties>
 		<java.version>1.8</java.version>
