@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 @ToString
 public class PlaceResponse implements Serializable {
-
+    private String id;
     private Location location;
     private String address;
     private String address_bn;
