@@ -1,10 +1,7 @@
 package com.jachai.map.service;
 
 import com.jachai.map.dto.Location;
-import com.jachai.map.dto.rest.response.BariKoiGeoCodeResponseRest;
-import com.jachai.map.dto.rest.response.BariKoiSearchListResponseRest;
-import com.jachai.map.dto.rest.response.BariKoiSearchResponse;
-import com.jachai.map.dto.rest.response.PlaceResponse;
+import com.jachai.map.dto.rest.response.*;
 import com.jachai.map.entity.Place;
 import com.jachai.map.repository.PlaceRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metric;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -62,17 +63,28 @@ public class PlaceService {
     }
 
     public BariKoiGeoCodeResponseRest getAddress(Location location) {
-        BariKoiGeoCodeResponseRest response = bariKoiRPCService.getAddress(location);
+        Place place = placeRepository.findFirstByGeoLocationNear(new Point(location.getLongitude(), location.getLatitude()), new Distance(.1, Metrics.KILOMETERS));
 
-        if ( placeRepository.existsByAddress(response.getPlace().getAddress()) == false) {
-            Place place = Place.builder()
-                    .location(location)
-                    .geoLocation(new GeoJsonPoint(location.getLongitude(), location.getLatitude()))
-                    .city(response.getPlace().getCity())
-                    .area(response.getPlace().getArea())
-                    .address(response.getPlace().getAddress())
-                    .build();
-            placeRepository.save(place);
+        BariKoiGeoCodeResponseRest response = null;
+        if( place == null ) {
+            response = bariKoiRPCService.getAddress(location);
+
+            if (placeRepository.existsByAddress(response.getPlace().getAddress()) == false) {
+                place = Place.builder()
+                        .location(location)
+                        .geoLocation(new GeoJsonPoint(location.getLongitude(), location.getLatitude()))
+                        .city(response.getPlace().getCity())
+                        .area(response.getPlace().getArea())
+                        .address(response.getPlace().getAddress())
+                        .build();
+                placeRepository.save(place);
+            }
+        } else {
+            response = new BariKoiGeoCodeResponseRest();
+            BariKoiGeoCodeResponse bariKoiPlace = new BariKoiGeoCodeResponse();
+            bariKoiPlace.setAddress(place.getAddress());
+            bariKoiPlace.setArea(place.getArea());
+            bariKoiPlace.setCity(place.getCity());
         }
         return response;
     }
