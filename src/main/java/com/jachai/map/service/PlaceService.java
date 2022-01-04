@@ -85,6 +85,7 @@ public class PlaceService {
             bariKoiPlace.setAddress(place.getAddress());
             bariKoiPlace.setArea(place.getArea());
             bariKoiPlace.setCity(place.getCity());
+            response.setPlace(bariKoiPlace);
         }
         return response;
     }
