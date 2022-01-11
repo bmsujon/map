@@ -93,8 +93,9 @@ public class PlaceService {
     @Async
     public void addPlaces(List<PlaceResponse> placeResponses, String key) {
         for ( PlaceResponse placeResponse : placeResponses ) {
-            if (placeRepository.existsByAddress(placeResponse.getAddress()) == false ) {
-                Place place = Place.builder()
+            Place place = placeRepository.findByAddress(placeResponse.getAddress());
+            if (place == null ) {
+                place = Place.builder()
                         .placeType(placeResponse.getPlaceType())
                         .address(placeResponse.getAddress())
                         .address_bn(placeResponse.getAddress_bn())
@@ -107,8 +108,15 @@ public class PlaceService {
                         .location(placeResponse.getLocation())
                         .geoLocation(new GeoJsonPoint(placeResponse.getLocation().getLongitude(), placeResponse.getLocation().getLatitude()))
                         .build();
-                placeRepository.save(place);
+
+            } else {
+                place.setAddress_bn(placeResponse.getAddress_bn());
+                place.setArea_bn(placeResponse.getArea_bn());
+                place.setCity_bn(placeResponse.getCity_bn());
+                place.setPostCode(placeResponse.getPostCode());
+                place.setKey(placeResponse.getAddress());
             }
+            placeRepository.save(place);
         }
 
     }
