@@ -67,6 +67,7 @@ public class PlaceService {
 
         BariKoiGeoCodeResponseRest response = null;
         if( place == null ) {
+            log.info("Do not found in our map");
             response = bariKoiRPCService.getAddress(location);
 
             if (placeRepository.existsByAddress(response.getPlace().getAddress()) == false) {
@@ -80,6 +81,7 @@ public class PlaceService {
                 placeRepository.save(place);
             }
         } else {
+            log.info("Found in our map");
             response = new BariKoiGeoCodeResponseRest();
             BariKoiGeoCodeResponse bariKoiPlace = new BariKoiGeoCodeResponse();
             bariKoiPlace.setAddress(place.getAddress());
