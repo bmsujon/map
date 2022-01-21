@@ -63,7 +63,7 @@ public class PlaceService {
     }
 
     public BariKoiGeoCodeResponseRest getAddress(Location location) {
-        Place place = placeRepository.findFirstByGeoLocationNear(new Point(location.getLongitude(), location.getLatitude()), new Distance(.01, Metrics.KILOMETERS));
+        Place place = placeRepository.findFirstByGeoLocationNear(new Point(location.getLongitude(), location.getLatitude()), new Distance(.015, Metrics.KILOMETERS));
 
         BariKoiGeoCodeResponseRest response = null;
         if( place == null ) {
@@ -71,6 +71,7 @@ public class PlaceService {
             response = bariKoiRPCService.getAddress(location);
 
             if (placeRepository.existsByAddress(response.getPlace().getAddress()) == false) {
+                log.info("New place saved");
                 place = Place.builder()
                         .location(location)
                         .geoLocation(new GeoJsonPoint(location.getLongitude(), location.getLatitude()))
@@ -79,6 +80,8 @@ public class PlaceService {
                         .address(response.getPlace().getAddress())
                         .build();
                 placeRepository.save(place);
+            } else {
+                log.info("OMG!!! this is not new place");
             }
         } else {
             log.info("Found in our map");
