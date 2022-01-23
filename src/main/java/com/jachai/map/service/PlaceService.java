@@ -37,8 +37,11 @@ public class PlaceService {
     }
     public List<PlaceResponse> findByKey(String key) {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<PlaceResponse> placeResponses =  placeRepository.findAllByKeyIgnoreCase(key, pageable);
-        if ( placeResponses.getContent().size() > 0 ) return placeResponses.getContent();
+        Page<PlaceResponse> placeResponses =  placeRepository.findAllByAddressContainsIgnoreCase(key, pageable);
+        if ( placeResponses.getContent().size() > 7 ) {
+            log.info("Return autocomplete result from our map");
+            return placeResponses.getContent();
+        }
 
 
         BariKoiSearchListResponseRest responseFromBariKoi = bariKoiRPCService.searchPlaces(key);
@@ -58,7 +61,7 @@ public class PlaceService {
             ret.add(placeResponse);
         }
         addPlaces(ret, key);
-        log.info("Return autocomplete result: " + ret.size());
+        log.info("Return autocomplete result from bari-koi: " + ret.size());
         return ret;
     }
 

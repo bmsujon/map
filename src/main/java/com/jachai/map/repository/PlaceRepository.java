@@ -15,4 +15,6 @@ public interface PlaceRepository extends MongoRepository<Place, String> {
     Page<PlaceResponse> findAllByKeyIgnoreCase(String key, Pageable pageable);
     Boolean existsByAddress(String address);
     Place findFirstByGeoLocationNear(Point point, Distance distance);
+
+    Page<PlaceResponse> findAllByAddressContainsIgnoreCase(String key, Pageable pageable);
 }
