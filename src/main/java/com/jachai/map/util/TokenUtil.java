@@ -74,6 +74,8 @@ public class TokenUtil {
             clientInfo.id = body.getId();
             clientInfo.mobileNumber = (String) body.get("mobileNumber");
             clientInfo.name = (String) body.get("name");
+            clientInfo.type = (String) body.get("type");
+            clientInfo.profilePicture = (String) body.get("profilePicture");
             return clientInfo;
         } catch (ClaimJwtException e) {
             throw new UnAuthorizeException("Bad token");
