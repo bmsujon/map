@@ -9,10 +9,12 @@ import com.jachai.map.util.MapSays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.async.DeferredResult;
 
 @Controller
+@EnableAsync
 public class GeoCodeControllerAsync {
     @Autowired
     private PlaceService placeService;
