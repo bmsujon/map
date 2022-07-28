@@ -66,7 +66,7 @@ public class PlaceService {
     }
 
     public BariKoiGeoCodeResponseRest getAddress(Location location) {
-        Place place = placeRepository.findFirstByGeoLocationNear(new Point(location.getLongitude(), location.getLatitude()), new Distance(.015, Metrics.KILOMETERS));
+        Place place = placeRepository.findFirstByGeoLocationNear(new Point(location.getLongitude(), location.getLatitude()), new Distance(.025, Metrics.KILOMETERS));
 
         BariKoiGeoCodeResponseRest response = null;
         if( place == null ) {
