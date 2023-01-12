@@ -24,7 +24,7 @@ public class GeoCodeControllerAsync {
     @Async
     public void getAddress(DeferredResult<ResponseEntity<SimpleMessageResponseREST>> result, Location location) {
         BariKoiGeoCodeResponseRest response = placeService.getAddress(location);
-        if(response == null) {
+        if(response.statusCode == 500 && response.getPlace() == null) {
             throw new NotFoundException("No Place found with this GeoLocation.");
 //            response = new BariKoiGeoCodeResponseRest();
 //            response.message = "No Place found with this GeoLocation.";
