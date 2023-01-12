@@ -3,6 +3,7 @@ package com.jachai.map.service;
 import com.jachai.map.dto.Location;
 import com.jachai.map.dto.rest.response.*;
 import com.jachai.map.entity.Place;
+import com.jachai.map.exception.NotFoundException;
 import com.jachai.map.repository.PlaceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,15 @@ public class PlaceService {
         BariKoiGeoCodeResponseRest response = null;
         if( place == null ) {
             log.info("Do not found in our map");
-            response = bariKoiRPCService.getAddress(location);
+            try {
+                response = bariKoiRPCService.getAddress(location);
+            } catch (Exception e) {
+                throw new NotFoundException("Exception in getting response for this geoLocation.");
+            }
+            if(response.getPlace() == null)
+                throw new NotFoundException("No Place found with this GeoLocation.");
+            if(response.getPlace().getAddress() == null)
+                throw new NotFoundException("No address found with this GeoLocation.");
 
             if (placeRepository.existsByAddress(response.getPlace().getAddress()) == false) {
                 log.info("New place saved");
