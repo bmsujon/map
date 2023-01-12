@@ -27,6 +27,7 @@ public class GeoCodeControllerAsync {
             response = new BariKoiGeoCodeResponseRest();
             response.message = "No Place found with this GeoLocation.";
             response.statusCode = 404;
+            response.setPlace(new BariKoiGeoCodeResponse("N/A", "N/A", "N/A"));
         }
         MapSays.ok(result, response);
     }
