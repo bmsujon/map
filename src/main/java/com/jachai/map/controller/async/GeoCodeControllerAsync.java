@@ -4,6 +4,7 @@ import com.jachai.map.dto.Location;
 import com.jachai.map.dto.rest.response.BariKoiGeoCodeResponse;
 import com.jachai.map.dto.rest.response.BariKoiGeoCodeResponseRest;
 import com.jachai.map.dto.rest.response.SimpleMessageResponseREST;
+import com.jachai.map.exception.NotFoundException;
 import com.jachai.map.service.BariKoiRPCService;
 import com.jachai.map.service.PlaceService;
 import com.jachai.map.util.MapSays;
@@ -24,10 +25,11 @@ public class GeoCodeControllerAsync {
     public void getAddress(DeferredResult<ResponseEntity<SimpleMessageResponseREST>> result, Location location) {
         BariKoiGeoCodeResponseRest response = placeService.getAddress(location);
         if(response == null) {
-            response = new BariKoiGeoCodeResponseRest();
-            response.message = "No Place found with this GeoLocation.";
-            response.statusCode = 404;
-            response.setPlace(new BariKoiGeoCodeResponse("N/A", "N/A", "N/A"));
+            throw new NotFoundException("No Place found with this GeoLocation.");
+//            response = new BariKoiGeoCodeResponseRest();
+//            response.message = "No Place found with this GeoLocation.";
+//            response.statusCode = 404;
+//            response.setPlace(new BariKoiGeoCodeResponse("N/A", "N/A", "N/A"));
         }
         MapSays.ok(result, response);
     }
